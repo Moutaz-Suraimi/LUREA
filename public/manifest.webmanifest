@@ -1,0 +1,14 @@
+{
+  "name": "مسابقة لوريا الكبرى",
+  "short_name": "لوريا",
+  "description": "شاركي في مسابقة لوريا الكبرى واختاري رقمك.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8F5",
+  "theme_color": "#D9A38F",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
+  ]
+}
