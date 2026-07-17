@@ -1,10 +1,7 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".output/public",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  "outputDirectory": ".vercel/output",
   "env": {
-    "NITRO_PRESET": "static"
+    "NITRO_PRESET": "vercel"
   }
 }
