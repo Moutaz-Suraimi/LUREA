@@ -47,6 +47,28 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      
+      // Proxy Supabase endpoints for clients to bypass ISP blocking
+      if (url.pathname.startsWith("/api/supabase/")) {
+        const supabaseUrl = process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || "https://ndvrwzngvnccdkeqcnui.supabase.co";
+        const targetPath = url.pathname.replace("/api/supabase", "");
+        const targetUrl = new URL(targetPath + url.search, supabaseUrl);
+        
+        const newReq = new Request(targetUrl, {
+          method: request.method,
+          headers: new Headers(request.headers),
+          body: request.body,
+          redirect: "manual",
+          // Required for Node.js fetch when proxying bodies
+          duplex: request.body ? 'half' : undefined
+        } as RequestInit);
+        
+        newReq.headers.delete("host");
+        
+        return await fetch(newReq);
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

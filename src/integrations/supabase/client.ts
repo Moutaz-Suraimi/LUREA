@@ -28,9 +28,14 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 
 function createSupabaseClient() {
-  // Use import.meta.env for client-side (Vite build-time replacement)
-  // Fall back to process.env for SSR (server-side rendering)
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://ndvrwzngvnccdkeqcnui.supabase.co';
+  const fallbackUrl = 'https://ndvrwzngvnccdkeqcnui.supabase.co';
+  
+  // Use proxy on the client to avoid ISP blocking, use direct URL in SSR
+  const SUPABASE_URL = typeof window !== 'undefined'
+    ? `${window.location.origin}/api/supabase`
+    : (import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || fallbackUrl);
+    
+  // The publishable key remains the same
   const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kdnJ3em5ndm5jY2RrZXFjbnVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyODk0MjEsImV4cCI6MjA5OTg2NTQyMX0.-KeDlI9i4aUfromuMFg8vPNyOjiCIBPmXKM2Pj4HiwE';
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
