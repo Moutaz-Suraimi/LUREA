@@ -47,9 +47,13 @@ function Auth() {
         setMode("signin");
       }
     } catch (e: any) {
-      toast.error(e.message || "خطأ في المصادقة");
+      const msg = e?.message || "خطأ في المصادقة";
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "(غير محددة)";
+      console.error("Auth error:", e, "Supabase URL:", supabaseUrl);
+      toast.error(msg + (msg === "Failed to fetch" ? ` — تحقق من اتصال الإنترنت أو إعدادات Supabase. URL: ${supabaseUrl}` : ""));
     } finally { setLoading(false); }
   };
+
 
   return (
     <SiteLayout>
